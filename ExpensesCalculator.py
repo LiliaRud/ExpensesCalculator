@@ -1,7 +1,7 @@
 expenses = []
 
-div = 45 * '_'
-row = '|%10s|%10s|%10s|%10s|'
+div = 65 * '_'
+row = '|%15s|%15s|%15s|%15s|'
 def print_results(id='Id', cat='Category', sum='Summ', dates= 'Date'):
     print(row % (id, cat, sum, dates))
     print(div)
@@ -119,7 +119,6 @@ functions = {
         'remove': remove,
         'show': show,
       }
-#=================================================================
 while True:
     print('Available actions:')
     for action in functions:
