@@ -47,20 +47,12 @@ def add():
             break
 #=================================================================
 def remove():
-    while True:
-        print(div)
-        print('For exit type \'q\'')
-        action = input('Enter the Id: ')
-        if action.lower() == 'q':
-            break
-        else:
-            rem_id = int(action)
-            for expense in expenses:
-                if expense['id'] == rem_id:
-                    expenses.remove(expense)
-                    print('Note was removed')
-                # else:
-                #     print('Incorrect id')
+    print(div)
+    rem_id = input('Enter the Id which will be deleted: ')
+    for expense in expenses:
+        if expense['id'] == int(rem_id):
+            expenses.remove(expense)
+            print('Note was removed')
     print(div)
 #=================================================================
 def show():
