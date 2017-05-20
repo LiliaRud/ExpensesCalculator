@@ -18,26 +18,31 @@ def set_id():
 def add():
     print(div)
     while True:
-        expenses[len(expenses):] = [{ 'id': set_id(), }]
+        element = { 'id': set_id(), }
         category = input('Enter category: ')
-        expenses[len(expenses) - 1]['category'] = category
+        element['category'] = category
         sum = input('Enter summ: ')
         for s in sum:
             if 58 > ord(s) > 47:
-                expenses[len(expenses) - 1]['sum'] = float(sum)
+                element['sum'] = float(sum)
             else:
                 print('Please, enter a number!')
                 return False
         exp_date = input('Enter date (yyyy/mm/dd): ')
-        if exp_date[4] == '/' and exp_date[7] == '/' and len(exp_date) == 10:
-            expenses[len(expenses) - 1]['date'] = exp_date
+        if len(exp_date) == 10:
+            if exp_date[4] == '/' and exp_date[7] == '/':
+                element['date'] = exp_date
+            else:
+                print('Please, enter the date in format yyyy/mm/dd!')
+                return False
         else:
             print('Please, enter the date in format yyyy/mm/dd!')
             return False
-        print('Id of note:', expenses[len(expenses) - 1]['id'])
+        print('Id of note:', element['id'])
         print('Do you want add something else?')
         action = input('Print \'Y\' or \'N\': ')
         print(div)
+        expenses[len(expenses):] = [element]
         if action.upper() == 'N':
             break
         elif action.upper() == 'Y':
