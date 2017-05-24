@@ -1,4 +1,9 @@
-expenses = []
+import json
+
+with open('expenses.json', 'r+') as f:
+    file = f.read()
+    if len(file) == 0:
+        json.dump([], f)
 
 div = 65 * '_'
 row = '|%15s|%15s|%15s|%15s|'
@@ -8,6 +13,8 @@ def print_results(id='Id', cat='Category', sum='Summ', dates= 'Date'):
 
 def set_id():
     iden = 1
+    with open('expenses.json', 'r') as f:
+        expenses = json.load(f)
     for expense in expenses:
         if len(expenses) + 1 == expense['id']:
             iden = expenses[len(expenses) - 1]['id'] + 1
@@ -38,11 +45,17 @@ def add():
         else:
             print('Please, enter the date in format yyyy/mm/dd!')
             return False
+
+        with open('expenses.json', 'r') as f:
+            expenses = json.load(f)
+        expenses.append(element)
+        with open('expenses.json', 'w') as f:
+            json.dump(expenses, f)
+
         print('Id of note:', element['id'])
         print('Do you want add something else?')
         action = input('Print \'Y\' or \'N\': ')
         print(div)
-        expenses[len(expenses):] = [element]
         if action.upper() == 'N':
             break
         elif action.upper() == 'Y':
@@ -54,10 +67,18 @@ def add():
 def remove():
     print(div)
     rem_id = input('Enter the Id which will be deleted: ')
+
+    with open('expenses.json', 'r') as f:
+        expenses = json.load(f)
+
     for expense in expenses:
         if expense['id'] == int(rem_id):
             expenses.remove(expense)
             print('Note was removed')
+
+    with open('expenses.json', 'w') as f:
+        json.dump(expenses, f)
+
     print(div)
 #=================================================================
 def show():
@@ -68,6 +89,10 @@ def show():
     3 - Show by date;
     4 - Show by amount ascending;
     5 - Show by amount descendingly: ''')
+
+    with open('expenses.json', 'r') as f:
+        expenses = json.load(f)
+
     if show_by ==  '1':
         print_results()
         for expense in expenses:
