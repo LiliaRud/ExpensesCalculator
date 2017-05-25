@@ -40,10 +40,10 @@ def add():
                 element['date'] = exp_date
             else:
                 print('Please, enter the date in format yyyy/mm/dd!')
-                return False
+                break
         else:
             print('Please, enter the date in format yyyy/mm/dd!')
-            return False
+            break
         element['id'] = set_id()
         expenses.append(element)
 
