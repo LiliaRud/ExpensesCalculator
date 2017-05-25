@@ -9,23 +9,22 @@ with open('expenses.json', 'r+') as f:
 
 div = 65 * '_'
 row = '|%15s|%15s|%15s|%15s|'
-def print_results(id, cat, sum, dates):
-    print(row % (id, cat, sum, dates))
+
+def print_results(r_id, r_cat, r_sum, r_dates):
+    print(row % (r_id, r_cat, r_sum, r_dates))
     print(div)
 
 def set_id():
-    iden = 1
-    for expense in expenses:
-        if len(expenses) + 1 == expense['id']:
-            iden = expenses[len(expenses) - 1]['id'] + 1
-        else:
-            iden = len(expenses) + 1
+    if len(expenses) == 0:
+        iden = 1
+    else:
+        iden = expenses[len(expenses) - 1]['id'] + 1
     return iden
-#=================================================================
+
 def add():
     print(div)
     while True:
-        element = { 'id': set_id(), }
+        element = {}
         category = input('Enter category: ')
         element['category'] = category
         sum = input('Enter summ: ')
@@ -45,7 +44,7 @@ def add():
         else:
             print('Please, enter the date in format yyyy/mm/dd!')
             return False
-
+        element['id'] = set_id()
         expenses.append(element)
 
         print('Id of note:', element['id'])
@@ -59,7 +58,7 @@ def add():
         else:
             print('You make some mistake')
             break
-#=================================================================
+
 def remove():
     print(div)
     rem_id = input('Enter the Id which will be deleted: ')
@@ -68,7 +67,7 @@ def remove():
             expenses.remove(expense)
             print('Note was removed')
     print(div)
-#=================================================================
+
 def show():
     print(div)
     show_by = input('''Choose the instruction:
@@ -82,39 +81,9 @@ def show():
         for expense in expenses:
             print_results(expense['id'], expense['category'], expense['sum'], expense['date'])
     elif show_by == '2':
-        choosing = input('Choose category: ')
-        print_results('Id', 'Category', 'Summ', 'Date')
-        for expense in expenses:
-            if choosing == expense['category']:
-                print_results(expense['id'], expense['category'], expense['sum'], expense['date'])
+        show_by_category()
     elif show_by == '3':
-        choosing_date = input('''Choose the instruction:
-        1 - Show per year;
-        2 - Show per month;
-        3 - Show per day: ''')
-        if choosing_date == '1':
-            year = input('Enter the year: ')
-            print_results('Id', 'Category', 'Summ', 'Date')
-            for expense in expenses:
-                if expense['date'][:4] == year:
-                    print_results(expense['id'], expense['category'], expense['sum'], expense['date'])
-        elif choosing_date == '2':
-            year = input('Enter the year: ')
-            month = input('Enter the month: ')
-            print_results('Id', 'Category', 'Summ', 'Date')
-            for expense in expenses:
-                if expense['date'][:4] == year and expense['date'][5:7] == month:
-                    print_results(expense['id'], expense['category'], expense['sum'], expense['date'])
-        elif choosing_date == '3':
-            year = input('Enter the year: ')
-            month = input('Enter the month: ')
-            day = input('Enter the day: ')
-            print_results('Id', 'Category', 'Summ', 'Date')
-            for expense in expenses:
-                if expense['date'][:4] == year and expense['date'][5:7] == month and expense['date'][8:] == day:
-                    print_results(expense['id'], expense['category'], expense['sum'], expense['date'])
-        else:
-            print('Incorrect inctruction')
+        show_by_date()
     elif show_by == '4':
          expenses_sorted = sorted(expenses, key=lambda expense: expense['sum'])
          print_results('Id', 'Category', 'Summ', 'Date')
@@ -127,7 +96,43 @@ def show():
              print_results(expense['id'], expense['category'], expense['sum'], expense['date'])
     else:
         print('Incorrect inctruction')
-#=================================================================
+
+def show_by_category():
+    choosing = input('Choose category: ')
+    print_results('Id', 'Category', 'Summ', 'Date')
+    for expense in expenses:
+        if choosing == expense['category']:
+            print_results(expense['id'], expense['category'], expense['sum'], expense['date'])
+
+def show_by_date():
+    choosing = input('''Choose the instruction:
+        1 - Show per year;
+        2 - Show per month;
+        3 - Show per day: ''')
+    if choosing == '1':
+        year = input('Enter the year: ')
+        print_results('Id', 'Category', 'Summ', 'Date')
+        for expense in expenses:
+            if expense['date'][:4] == year:
+                print_results(expense['id'], expense['category'], expense['sum'], expense['date'])
+    elif choosing == '2':
+        year = input('Enter the year: ')
+        month = input('Enter the month: ')
+        print_results('Id', 'Category', 'Summ', 'Date')
+        for expense in expenses:
+            if expense['date'][:4] == year and expense['date'][5:7] == month:
+                print_results(expense['id'], expense['category'], expense['sum'], expense['date'])
+    elif choosing == '3':
+        year = input('Enter the year: ')
+        month = input('Enter the month: ')
+        day = input('Enter the day: ')
+        print_results('Id', 'Category', 'Summ', 'Date')
+        for expense in expenses:
+            if expense['date'][:4] == year and expense['date'][5:7] == month and expense['date'][8:] == day:
+                print_results(expense['id'], expense['category'], expense['sum'], expense['date'])
+    else:
+        print('Incorrect inctruction')
+
 functions = {
         'add': add,
         'remove': remove,
