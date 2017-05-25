@@ -3,18 +3,18 @@ import json
 with open('expenses.json', 'r+') as f:
     file = f.read()
     if len(file) == 0:
-        json.dump([], f)
+       expenses = []
+    else:
+        expenses = json.loads(file)
 
 div = 65 * '_'
 row = '|%15s|%15s|%15s|%15s|'
-def print_results(id='Id', cat='Category', sum='Summ', dates= 'Date'):
+def print_results(id, cat, sum, dates):
     print(row % (id, cat, sum, dates))
     print(div)
 
 def set_id():
     iden = 1
-    with open('expenses.json', 'r') as f:
-        expenses = json.load(f)
     for expense in expenses:
         if len(expenses) + 1 == expense['id']:
             iden = expenses[len(expenses) - 1]['id'] + 1
@@ -46,11 +46,7 @@ def add():
             print('Please, enter the date in format yyyy/mm/dd!')
             return False
 
-        with open('expenses.json', 'r') as f:
-            expenses = json.load(f)
         expenses.append(element)
-        with open('expenses.json', 'w') as f:
-            json.dump(expenses, f)
 
         print('Id of note:', element['id'])
         print('Do you want add something else?')
@@ -67,18 +63,10 @@ def add():
 def remove():
     print(div)
     rem_id = input('Enter the Id which will be deleted: ')
-
-    with open('expenses.json', 'r') as f:
-        expenses = json.load(f)
-
     for expense in expenses:
         if expense['id'] == int(rem_id):
             expenses.remove(expense)
             print('Note was removed')
-
-    with open('expenses.json', 'w') as f:
-        json.dump(expenses, f)
-
     print(div)
 #=================================================================
 def show():
@@ -89,17 +77,13 @@ def show():
     3 - Show by date;
     4 - Show by amount ascending;
     5 - Show by amount descendingly: ''')
-
-    with open('expenses.json', 'r') as f:
-        expenses = json.load(f)
-
     if show_by ==  '1':
-        print_results()
+        print_results('Id', 'Category', 'Summ', 'Date')
         for expense in expenses:
             print_results(expense['id'], expense['category'], expense['sum'], expense['date'])
     elif show_by == '2':
         choosing = input('Choose category: ')
-        print_results()
+        print_results('Id', 'Category', 'Summ', 'Date')
         for expense in expenses:
             if choosing == expense['category']:
                 print_results(expense['id'], expense['category'], expense['sum'], expense['date'])
@@ -110,14 +94,14 @@ def show():
         3 - Show per day: ''')
         if choosing_date == '1':
             year = input('Enter the year: ')
-            print_results()
+            print_results('Id', 'Category', 'Summ', 'Date')
             for expense in expenses:
                 if expense['date'][:4] == year:
                     print_results(expense['id'], expense['category'], expense['sum'], expense['date'])
         elif choosing_date == '2':
             year = input('Enter the year: ')
             month = input('Enter the month: ')
-            print_results()
+            print_results('Id', 'Category', 'Summ', 'Date')
             for expense in expenses:
                 if expense['date'][:4] == year and expense['date'][5:7] == month:
                     print_results(expense['id'], expense['category'], expense['sum'], expense['date'])
@@ -125,7 +109,7 @@ def show():
             year = input('Enter the year: ')
             month = input('Enter the month: ')
             day = input('Enter the day: ')
-            print_results()
+            print_results('Id', 'Category', 'Summ', 'Date')
             for expense in expenses:
                 if expense['date'][:4] == year and expense['date'][5:7] == month and expense['date'][8:] == day:
                     print_results(expense['id'], expense['category'], expense['sum'], expense['date'])
@@ -133,12 +117,12 @@ def show():
             print('Incorrect inctruction')
     elif show_by == '4':
          expenses_sorted = sorted(expenses, key=lambda expense: expense['sum'])
-         print_results()
+         print_results('Id', 'Category', 'Summ', 'Date')
          for expense in expenses_sorted:
              print_results(expense['id'], expense['category'], expense['sum'], expense['date'])
     elif show_by == '5':
          expenses_sorted = sorted(expenses, key=lambda expense: expense['sum'], reverse=True)
-         print_results()
+         print_results('Id', 'Category', 'Summ', 'Date')
          for expense in expenses_sorted:
              print_results(expense['id'], expense['category'], expense['sum'], expense['date'])
     else:
@@ -158,6 +142,8 @@ while True:
     if action.lower() in functions:
         functions[action.lower()]()
     elif action.lower() == 'q':
+        with open('expenses.json', 'w') as f:
+            json.dump(expenses, f)
         break
     else:
         print('Incorrect instruction')
